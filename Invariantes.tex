@@ -1,0 +1,248 @@
+\documentclass[12pt,spanish]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel} 
+\usepackage[utf8]{inputenc}	
+\spanishdecimal{.}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{multirow,booktabs}
+\usepackage[table]{xcolor}
+\usepackage{fullpage}
+\usepackage{lastpage}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{wrapfig}
+\usepackage{setspace}
+\usepackage[retainorgcmds]{IEEEtrantools}
+\usepackage[margin=3cm]{geometry}
+\newlength{\tabcont}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+
+
+\title{Invariantes}
+
+\newcommand\course{Análisis De Algoritmos}	
+\newcommand\semester{2016}  
+\newcommand\asgnname{2}        
+\newcommand\yourname{David Suárez}
+\newcommand{\vect}[1]{\overline{#1}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\theoremstyle{definition}
+\newtheorem{defn}{Definición}
+\newtheorem{reg}{Regla}
+\newtheorem{ejer}{EJERCICIO}
+\pagestyle{fancyplain}
+\headheight 32pt
+\lhead{\yourname\ \vspace{0.1cm} \\ \course}
+\chead{\textbf{\Large Invariantes}}
+\rhead{2016/02/02}
+\cfoot{P\'agina \thepage \hspace{1pt} de \pageref{LastPage} \vspace{3mm} \\ \footnotesize \textcolor{gray}{Análisis De Algoritmos, Leonardo Florez}}
+\textheight 580pt
+\headsep 10pt
+\footskip 40pt
+\topmargin = 7pt
+
+
+
+\begin{document}
+
+%----------------------------------------------------------
+% --------------- Búsqueda lineal -------------------------
+%----------------------------------------------------------
+
+\section{Búsqueda Lineal}{}
+Este algoritmo busca un índice $i$ que indica la posición donde se encuentra un valor dado $v$ en un arreglo $S=  \left.\langle a_{0}, a_{1}, \cdots, a_{N-1} \rangle\right.$, donde $N$ es el tamaño del arreglo, comparando los elementos uno por uno y de izquierda a derecha hasta que la posición donde se encuentra $v$ es encontrada o no hay más elementos que comparar en el arreglo.\\
+Si el arreglo posee múltiples ocurrencias de $v$ el algoritmo retornará la posición $i$ de la primera ocurrencia de $v$. \\
+Si $v$ no esta presente en el arreglo el algoritmo retornará $N$ el tamaño del arreglo.
+
+% ----------------- Definición Formal ---------------------
+\subsection{Formalmente:}{}
+Entradas: Arreglo $S$ con $N$ números y el valor $v$ a buscar:
+\begin{equation}
+    S =  \left.\langle a_{0}, a_{1}, a_{2}, \cdots, a_{N-1} \rangle\right.;
+    N > 0
+\end{equation}
+
+Salidas: Índice $i$ tal que: 
+\begin{equation}
+     v = a_{i} \Leftrightarrow v \in S \lor i = N  \Leftrightarrow v \notin S
+\end{equation}
+
+% ----------------- Pseudocódigo --------------------------
+\subsection{Pseudocódigo:}{}
+\begin{algorithm}
+\begin{algorithmic}[1]
+\STATE \textbf{function} BusquedaLineal( $S$, $v$ ) 
+\STATE \textbf{var} $encontro \leftarrow \FALSE$
+\FOR {$i \leftarrow 0$ \textbf{to} $|S| -1 \hspace{0.2cm} \AND \hspace{0.2cm} encontro == \FALSE $}
+    \IF{ $ S[i] == v $ }
+        \STATE $encontro \leftarrow \TRUE$
+    \ENDIF
+\STATE $i \leftarrow i + 1$
+\ENDFOR
+\RETURN $i$
+\STATE \textbf{end function}
+\caption{Búsqueda Lineal.}
+\end{algorithmic}
+\end{algorithm}
+
+% ----------------- Invariantes --------------------------
+\subsection{Invariantes:}{}
+Se pueden encontrar dos invariantes en este algoritmo.
+\subsubsection{El valor de $i$ nunca será mayor que $N = |S|$:}{}
+
+\begin{enumerate}
+\item Formalmente: $ 0  \le i  \le N $
+\item Prueba por inducción:
+    \begin{enumerate}
+    \item Inicialización ( $i \leftarrow 0 $ ):\\
+        En la primera iteración del ciclo se cumple que: $ 0  \le i  \le N $ debido a la inicialización de $i \leftarrow 0$. 
+    \item Mantenimiento/Iteración/Actualización/Procesamiento  ($ 1  \le i  \le N $):\\
+        Debido a la condición del ciclo \textbf{for} en cada iteración del ciclo se cumple que $ 0  \le i  \le N $. De no ser así se terminaría el ciclo y el mayor valor de $i$ sería $N$ pero nunca $N + 1 $.
+    \item Terminación ($ i \leftarrow N $): \\
+        Si $v \in S \rightarrow i < N $. \\
+        Si $v \notin S \rightarrow i = N$.
+    \end{enumerate}
+\end{enumerate}
+
+
+\subsubsection{Debido a que es una búsqueda secuencial, de izquierda a derecha, el valor $v$ no se encuentra en el subarreglo $S' =  \left.\langle a_{0}, \cdots, a_{i-1} \rangle\right.$:}{}
+ ``EL valor $v$ no estará en los elementos que el algoritmo ya ha procesado.'' 
+\begin{enumerate}
+\item Formalmente: $ v  \notin S' $
+
+\item Prueba por inducción:
+    \begin{enumerate}
+    \item Inicialización ( $i \leftarrow 0 $ ):\\
+      Si $v = a_{0}$ el subarreglo $S'$ no se  ``crearía'' ya que debido a la condición de la sentencia \textbf{if}   este ciclo terminaría sin ni siquiera hacer su primera iteración.\\
+      Si $v \neq a_{0}$ $i$ tomaría el valor de 1, es decir, $i \leftarrow 1$ y el subarreglo $S'$ sería $S' =  \left.\langle a_{0} \rangle\right.$ ya que $a_{i-1} = a_{0} \neq v $ y se cumple que $ v  \notin S' =  \left.\langle a_{0}, \cdots, a_{i-1} \rangle\right.$.
+    \item Mantenimiento/Iteración/Actualización/Procesamiento  ($ 1  \le i  \le N $):\\
+        Debido a la condición de la sentencia \textbf{if} y sabiendo que esta búsqueda es secuencial en algún instante cuando $i$ tome un valor $p$ quiere decir que lo elementos anteriores a $S[p] \neq v$.
+    \item Terminación ($i \leftarrow N$): \\
+        Si $i < N \rightarrow v\in S$ y está en la posición $S[i]$ por tanto $v \notin S' =  \left.\langle a_{0}, \cdots, a_{i-1} \rangle\right.$.\\
+        Si $i = N \rightarrow v\notin S =  \left.\langle a_{0}, \cdots, a_{N-1} \rangle\right.$ y como $i = N \rightarrow S = S' \rightarrow v \notin S'=  \left.\langle a_{0}, \cdots, a_{i-1} \rangle\right.$.
+    \end{enumerate}
+\end{enumerate}
+
+%----------------------------------------------------------
+% --------------- Conteo de números repetidos -------------
+%----------------------------------------------------------
+
+\section{Conteo de Números Repetidos}{}
+Este algoritmo genera un arreglo $S'$ que contiene duplas $ (x, n)$ donde $n$ es la cantidad de veces que se repite un número $x \in S =  \left.\langle a_{0}, a_{1}, \cdots, a_{N-1} \rangle\right.$, donde $N$ es el tamaño del arreglo. \\ 
+Hace uso de dos ciclos; el primero para recorrer cada elemento de $S$ y evitar procesar un número ya ``contado'', con el segundo ciclo se cuenta la cantidad de veces ($n$) que aparece un número $x$.
+
+% ----------------- Definición Formal ---------------------
+\subsection{Formalmente:}{}
+Entradas: Arreglo $S$ con $N$ números:
+
+\begin{equation}
+    S =  \left.\langle a_{0}, a_{1}, a_{2}, \cdots, a_{N-1} \rangle\right.;
+    N > 0
+\end{equation}
+
+Salidas: Arreglo $S' = \left.\langle (x,n)_{0}, (x,n)_{1}, \cdots, (x,n)_{N-1} \rangle\right.$ con $N$ duplas donde cada dupla: 
+
+\begin{equation}
+     (x,n) | n \equiv x_{i} \hspace{0.2cm}(Frecuencia \hspace{0.1cm} Absoluta \hspace{0.1cm} de \hspace{0.1cm} x ).
+\end{equation} 
+
+% ----------------- Pseudocódigo --------------------------
+\subsection{Pseudocódigo:}{}
+\begin{algorithm}
+\begin{algorithmic}[1]
+\STATE \textbf{function} ContarRepetidos( $S$ )\\
+\COMMENT{Arreglo con $N$ duplas.}
+\STATE \textbf{var} $ S'\left.\langle x,n \rangle\right.[N]$
+\STATE \textbf{var} $X,rep$
+    \FOR {$i \leftarrow 0$ \textbf{to} $|S| -1 $}
+        \IF{$S[i] \notin S'$}
+            \STATE $X \leftarrow S[i]$
+            \STATE $rep \leftarrow 0$
+            \FOR {$j \leftarrow i$ \textbf{to} $|S| -1$}
+              \IF{$S[j] == X$}
+                  \STATE $ rep \leftarrow rep + 1$
+              \ENDIF  
+            \STATE $j \leftarrow j + 1$  
+            \ENDFOR
+            \STATE $S'[X] \leftarrow rep$ 
+        \ENDIF    
+        \STATE $i \leftarrow i + 1$
+    \ENDFOR
+\RETURN $S'$
+\STATE \textbf{end function}
+\caption{Contar Números Repetidos.} \label{alg:algoritmoContar}
+\end{algorithmic}
+\end{algorithm}
+
+% ----------------- Invariantes --------------------------
+\subsection{Invariantes:}{}
+Se pueden encontrar cuatro invariantes en este algoritmo.
+
+\subsubsection{El valor de $j$ nunca será menor que $i$:}{}
+
+\begin{enumerate}
+\item Formalmente: $ j \geq i $.
+\item Prueba por inducción:
+    \begin{enumerate}
+    \item Inicialización ( $j \leftarrow i $ ):\\
+        En la primera iteración del ciclo más interno se cumple que: $ j \geq i $ debido a la inicialización de $j \leftarrow i$. 
+    \item Mantenimiento/Iteración/Actualización/Procesamiento  ($ i  \le j  \le N $):\\
+         Como $ j $ inicia en $i$ y durante cada iteración del ciclo más interno $j$ solo aumenta su valor, es decir, $j \leftarrow j + 1$ esto asegura que $j$ nuca disminuirá su valor para llegar a ser $< i$.
+    \item Terminación ($j = N $): \\
+        Cuando termina el ciclo más interno el mayor valor que $j$ podrá tomar es $N$ (debido a condición de este ciclo \textbf{for}) y como $N \geq i \rightarrow j \geq i$.
+    \end{enumerate}
+\end{enumerate}
+
+\subsubsection{A un número $X$ no se le contarán dos veces sus repetidos, es decir, cada numero distinto de $S$ se procesará una sola vez:}{}
+
+\begin{enumerate}
+\item Formalmente: Si $ X \in S' \rightarrow$ no se procesa de nuevo.
+\item Prueba por inducción:
+    \begin{enumerate}
+    \item Inicialización ( $i \leftarrow 0 $ ):\\
+        En la primera iteración del ciclo más externo se procesará el elemento $S[0]$ y como no se ha procesado ningún otro entonces $S[0] \notin S'$. 
+    \item Mantenimiento/Iteración/Actualización/Procesamiento  ($ 1  \le i  \le N $):\\
+         Debido a la condición de la primera sentencia \textbf{if} no se entrará al ciclo más interno si $S[i] \in S'$ asegurando que si el elemento $S[i]$ ya se proceso no se procese de nuevo.
+    \item Terminación ($i = N $): \\
+        Cuando termina el ciclo más externo el arreglo $S'$ solo contendrá duplas $| x_{0} \neq x_{1} \neq x_{2} \neq \cdots \neq x_{N-1}$.
+    \end{enumerate}
+\end{enumerate}
+
+\subsubsection{El valor de $i$ nunca será mayor que $N = |S|$:}{}
+\begin{enumerate}
+\item Formalmente: $ 0  \le i  \le N $
+\item Prueba por inducción:
+    \begin{enumerate}
+    \item Inicialización ( $i \leftarrow 0 $ ):\\
+        En la primera iteración del ciclo más externo se cumple que: $ 0  \le i  \le N $ debido a la inicialización de $i \leftarrow 0$. 
+    \item Mantenimiento/Iteración/Actualización/Procesamiento  ($ 1  \le i  \le N $):\\
+        Debido a la condición del ciclo \textbf{for} más externo en cada iteración del ciclo se cumple que $ 0  \le i  \le N $. De no ser así se terminaría el ciclo y el mayor valor de $i$ sería $N$ pero nunca $N + 1 $.
+    \item Terminación ($i \leftarrow N $): \\
+        Cuando $i = N $ el ciclo más externo termina debido a su condición.\\
+        También puede terminar cuando haya contado las repeticiones de todos los números en $S$ en cuyo caso $i$ seguirá siendo $\le N$.
+    \end{enumerate}
+\end{enumerate}
+
+
+\subsubsection{El valor de $j$ nunca será mayor que $N = |S|$:}{}
+
+\begin{enumerate}
+\item Formalmente: $ 0  \le j  \le N $
+\item Prueba por inducción:
+    \begin{enumerate}
+    \item Inicialización ( $j \leftarrow 0 $ ):\\
+        En la primera iteración del ciclo más interno se cumple que: $ 0  \le j  \le N $ debido a la inicialización de $j \leftarrow 0$. 
+    \item Mantenimiento/Iteración/Actualización/Procesamiento  ($ 1  \le j  \le N $):\\
+        Debido a la condición del ciclo \textbf{for} más interno en cada iteración del ciclo se cumple que $ 0  \le j  \le N $. De no ser así se terminaría el ciclo y el mayor valor de $j$ sería $N$ pero nunca $N + 1 $.
+    \item Terminación ($j = N $): \\
+        Cuando $j = N $ el ciclo más interno termina debido a su condición.\\
+        También puede terminar cuando haya contado las repeticiones de todos los números en $S$ en cuyo caso $j$ seguirá siendo $\le N$.
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}
