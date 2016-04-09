@@ -1,0 +1,77 @@
+\documentclass{article}
+\usepackage{mathtools}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{lmodern}
+\usepackage{mathtools, nccmath}
+\usepackage{xparse}
+\begin{document}
+
+David Francisco Calle Restrepo - 1020800469
+
+\section{Busqueda Lineal}
+
+% Algoritmo 1
+
+
+\begin{algorithm}[htp]
+\DontPrintSemicolon
+\SetAlgoLined
+\SetKwInOut{Input}{Entrada}\SetKwInOut{Output}{Salida}
+\Input{Una secuencia S de numeros, Entero v}
+\Output{$i\mid$  i $\in$  $\mathbb{N}$ $\land$ ( i $>=$ 0   $\lor$  i $<=$ $|$ S $|$  $\lor$ i = $\aleph$ ) }
+\BlankLine
+
+\For{ $i\leftarrow 1$ to  $|$ S $|$  }{
+	\If{S[i] = v}{
+		return i\;
+	}
+}
+	return $\aleph$\;
+
+\caption{Busqueda Lineal}
+\end{algorithm}
+\bigskip % add 12pt space in-between
+\subsection{Invariante}
+$\forall$ j $<$ i $\rightarrow$  S[j] $\neq$ v
+inicializacion, i = 0 por lo que no hay j $<$ i.	\BlankLine
+Iteracion, Se cumple siempre que no se haya encontrado. Si se encuentra, el valor es válido ya que todo es menor al tamaño	\BlankLine
+Terminacion, o termina el ciclo o el resultado es aleph.	\BlankLine
+
+\section{Conteo de repetidos}
+% Algorithm 2: Conteo
+
+
+\begin{algorithm}[H]
+\DontPrintSemicolon
+\SetAlgoLined
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{Una secuencia S de numeros, entero v}
+\Output{Entero mayor o igual a cero}
+\BlankLine
+
+$r\leftarrow 0$
+\BlankLine
+\For{$i\leftarrow 1$ to  $|$ S $|$  }{
+
+	\BlankLine
+		\If{S[i] = v}{
+			$r\leftarrow r + 1$
+		}
+}
+return r
+\caption{Conteo de repetidos}
+\end{algorithm}
+\subsection{Invariante}
+$\forall$ i, 0 $<$ i $<$ $|$ S $|$	\BlankLine
+$\forall$ r, 0 $<=$ r $<=$ $|$ S $|$	\BlankLine
+inicializacion, i = 0. r es cero	\BlankLine
+Iteracion, Se cumple siempre, r aumenta de uno en uno cada iteracion en caso de que sea el mismo, el tam maximo es $|$ S $|$	\BlankLine
+Terminacion, i $<$= $|$ S $|$ y retorna el resultado.	\BlankLine
+
+
+\end{document}
